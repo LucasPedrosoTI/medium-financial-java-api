@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Statistics {
+public class Statistic {
 
   private BigDecimal sum;
   private BigDecimal avg;
