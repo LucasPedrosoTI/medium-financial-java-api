@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +43,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler imple
     @ExceptionHandler({InvalidDateException.class})
     public ResponseEntity<Object> handleInvalidDateException(InvalidDateException ex, WebRequest request) {
 
-        String mensagemUsuario = ex.getMessage();
-        String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+        String userMessage = ex.getMessage();
+        String devMessage = ExceptionUtils.getRootCauseMessage(ex);
 
-        List<Error> errors = Arrays.asList(new Error(mensagemUsuario, mensagemDev));
+        List<Error> errors = Arrays.asList(new Error(userMessage, devMessage));
 
         return this.handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -62,11 +63,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler imple
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
             WebRequest request) {
-        String mensagemUsuario = this.messageSource.getMessage("controller.not-allowed", null,
+        String userMessage = this.messageSource.getMessage("controller.not-allowed", null,
                 LocaleContextHolder.getLocale());
-        String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+        String devMessage = ExceptionUtils.getRootCauseMessage(ex);
 
-        List<Error> erros = Arrays.asList(new Error(mensagemUsuario, mensagemDev));
+        List<Error> erros = Arrays.asList(new Error(userMessage, devMessage));
 
         return this.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -81,15 +82,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler imple
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        String mensagemUsuario = messageSource.getMessage("controller.not-allowed", null,
+        String userMessage = messageSource.getMessage("controller.not-allowed", null,
                 LocaleContextHolder.getLocale());
-        String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+        String devMessage = ExceptionUtils.getRootCauseMessage(ex);
 
-        List<Error> errors = Arrays.asList(new Error(mensagemUsuario, mensagemDev));
+        List<Error> errors = Arrays.asList(new Error(userMessage, devMessage));
 
         return handleExceptionInternal(ex, errors, headers, status, request);
     }
 
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex,
+            WebRequest request) {
+        String userMessage = this.messageSource.getMessage("resource.not-found", null,
+                LocaleContextHolder.getLocale());
+        String devMessage = ex.toString();
+
+        List<Error> errors = Arrays.asList(new Error(userMessage, devMessage));
+
+        return this.handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
@@ -100,10 +112,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler imple
         List<Error> errors = new ArrayList<>();
 
         bindingResult.getFieldErrors().forEach(fieldError -> {
-            String mensagemUsuario = this.messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-            String mensagemDev = fieldError.toString();
+            String userMessage = this.messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+            String devMessage = fieldError.toString();
 
-            errors.add(new Error(mensagemUsuario, mensagemDev));
+            errors.add(new Error(userMessage, devMessage));
         });
 
         return errors;
