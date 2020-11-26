@@ -5,7 +5,8 @@ CREATE TABLE transaction (
   transaction_date DATETIME NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,
   type VARCHAR(20) NOT NULL,
-  CONSTRAINT UC_Transaction UNIQUE (nsu, authorization_number)
+  UNIQUE (nsu),
+  UNIQUE (authorization_number)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 INSERT INTO transaction (
     nsu,

@@ -22,31 +22,31 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Transaction {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Size(min = 3)
-  private String nsu;
+    @Size(min = 3, max = 100)
+    private String nsu;
 
-  @NotNull
-  @Size(min = 3)
-  @Column(name = "authorization_number")
-  private String authorizationNumber;
+    @NotNull
+    @Size(min = 3, max = 100)
+    @Column(name = "authorization_number")
+    private String authorizationNumber;
 
     @Column(name = "transaction_date")
-    @JsonFormat(pattern = "YYYY-MM-DD hh:mm:ss")
-  private LocalDateTime transactionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime transactionDate;
 
-  @NotNull
-  private BigDecimal amount;
+    @NotNull
+    private BigDecimal amount;
 
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private TransactionTypeEnum type;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TransactionTypeEnum type;
 
-  public Transaction(TransactionTypeEnum type) {
-    this.type = type;
-  }
+    public Transaction(TransactionTypeEnum type) {
+        this.type = type;
+    }
 
 }
