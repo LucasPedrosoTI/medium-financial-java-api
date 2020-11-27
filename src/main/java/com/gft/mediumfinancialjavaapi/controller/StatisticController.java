@@ -5,9 +5,9 @@
  */
 package com.gft.mediumfinancialjavaapi.controller;
 
+import com.gft.mediumfinancialjavaapi.model.Statistic;
 import com.gft.mediumfinancialjavaapi.service.StatisticService;
 import com.gft.mediumfinancialjavaapi.service.TransactionService;
-import com.gft.mediumfinancialjavaapi.model.Statistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lps10
  */
 @RestController
-@RequestMapping("/statistics")
+@RequestMapping("/v1/statistics")
 public class StatisticController {
 
     @Autowired

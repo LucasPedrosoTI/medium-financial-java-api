@@ -12,6 +12,8 @@ package com.gft.mediumfinancialjavaapi.exceptions;
 
 public class InvalidDateException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public InvalidDateException() {
     }
 
@@ -27,7 +29,8 @@ public class InvalidDateException extends RuntimeException {
         super(cause);
     }
 
-    public InvalidDateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InvalidDateException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
